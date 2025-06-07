@@ -1,8 +1,7 @@
 package com.sc.mmusab.controller;
 
-
 import com.sc.mmusab.service.BoaCsvImportService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,10 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/boa/import")
+@AllArgsConstructor
 public class BoaCsvUploadController {
 
-  @Autowired
-  private BoaCsvImportService csvImportService;
+  private final BoaCsvImportService csvImportService;
 
   @PostMapping("/csv")
   public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file) {

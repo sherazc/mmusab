@@ -5,7 +5,7 @@ import com.sc.mmusab.entity.BoaStatementSummary;
 import com.sc.mmusab.entity.BoaTransaction;
 import com.sc.mmusab.repo.BoaStatementSummaryRepository;
 import com.sc.mmusab.repo.BoaTransactionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -16,13 +16,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
+@AllArgsConstructor
 public class BoaCsvImportService {
 
-  @Autowired
-  private BoaStatementSummaryRepository summaryRepo;
-
-  @Autowired
-  private BoaTransactionRepository txnRepo;
+  private final BoaStatementSummaryRepository summaryRepo;
+  private final BoaTransactionRepository txnRepo;
 
   private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 

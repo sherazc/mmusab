@@ -13,7 +13,7 @@ import java.time.LocalDate;
 
 
 @Entity
-@Table(name = "BOA_TRANSACTIONS")
+@Table(name = "BOA_TRANSACTION")
 @Data
 public class BoaTransaction {
   @Id
