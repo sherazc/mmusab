@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface BoaTransactionRepository extends JpaRepository<BoaTransaction, Long> {
 
-  @Query("select boat from BoaTransaction boat")
+  @Query("select boat from BoaTransaction boat where boat.amount > 0")
   List<BoaTransaction> findAllTransactions();
 }

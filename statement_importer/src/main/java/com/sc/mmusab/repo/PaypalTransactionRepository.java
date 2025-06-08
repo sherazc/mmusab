@@ -7,6 +7,10 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface PaypalTransactionRepository extends JpaRepository<PaypalTransaction, Long> {
-  @Query("select ppt from PaypalTransaction ppt")
+  @Query(value = """
+      select ppt from PaypalTransaction ppt
+      where trim(ppt.name) != ''
+      and ppt.gross > 0
+     """)
   List<PaypalTransaction> findAllTransactions();
 }
