@@ -49,7 +49,7 @@ public class TransactionService {
         .payPalId(paypalTransaction.getId())
         .source(Source.PAY_PAL)
         .description(paypalTransaction.getItemTitle())
-        .fullName(paypalTransaction.getName())
+        .fullName(paypalTransaction.getName() == null ? "" : paypalTransaction.getName().toUpperCase())
         .amountCents((long) (paypalTransaction.getGross().doubleValue() * 100))
         .build();
 
