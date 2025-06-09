@@ -66,3 +66,50 @@ CREATE TABLE paypal_transaction (
     country_code VARCHAR(10),
     balance_impact VARCHAR(20)
 );
+
+
+create table user_profile
+(
+    id            bigint       not null auto_increment,
+    email         varchar(255) not null,
+    user_password varchar(255),
+    event_id      bigint,
+    primary key (id)
+);
+
+
+create table user_role
+(
+    id        bigint       not null auto_increment,
+    role_name varchar(255) not null,
+    primary key (id)
+);
+
+
+create table m2m_user_profile_user_role
+(
+    user_profile_id bigint not null,
+    user_role_id    bigint not null,
+    primary key (user_profile_id, user_role_id)
+);
+
+
+alter table m2m_user_profile_user_role
+    add constraint FK_m2m_user_profile_user_role_user_role_id
+        foreign key (user_role_id)
+            references user_role (id);
+
+alter table m2m_user_profile_user_role
+    add constraint FK_m2m_user_profile_user_role_user_profile_id
+        foreign key (user_profile_id)
+            references user_profile (id);
+
+
+
+select *
+from paypal_transaction pt1_0 where 
+-- pt1_0.name<>null 
+-- and 
+trim(BOTH from pt1_0.name)<>'' 
+and 
+pt1_0.gross>0;
