@@ -11,14 +11,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * When the user login, this service is responsible for loading UserDetails/ScUserDetails
- * The loaded UserDetails/ScUserDetails will be used by SpringSecurity to check if the request's
- * username/password and authorities authenticates for user to access the resources.
- *
- *  Uses database to load users & roles
- *
- */
 @Service
 public class ScUserDetailServiceImpl implements UserDetailsService {
 

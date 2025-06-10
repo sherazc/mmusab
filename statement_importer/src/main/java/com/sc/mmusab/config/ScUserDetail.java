@@ -1,6 +1,7 @@
 package com.sc.mmusab.config;
 
 import com.sc.mmusab.entity.auth.ScUser;
+import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,24 +10,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * DTO Object used by Spring Security. When authenticating in Spring Security uses this DTO to get users:
- * - Active,
- * - Roles/Authorities
- * - Password
- * - Any other custom data
- *
- * org.springframework.security.core.userdetails.UserDetails is used to create
- * org.springframework.security.core.Authentication
- *
- * Authentication is the main Object that is used by Spring Security's Security Context.
- *
- * Authentication Object can be DI. It contains current user's:
- * - Username
- * - is authenticated
- * - password
- * - Roles/Authorities
- */
+@Data
 public class ScUserDetail implements UserDetails {
 
     private final ScUser scUser;
