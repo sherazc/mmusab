@@ -10,14 +10,14 @@ drop table boa_transactions;
 
 CREATE TABLE boa_statement_summary (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    description VARCHAR(100),
+    deMMription VARCHAR(100),
     summary_amount DECIMAL(15, 2)
 );
 
 CREATE TABLE boa_transaction (
     id INT AUTO_INCREMENT PRIMARY KEY,
     txn_date DATE,
-    description TEXT,
+    deMMription TEXT,
     amount DECIMAL(15, 2),
     running_balance DECIMAL(15, 2)
 );
@@ -67,44 +67,88 @@ CREATE TABLE paypal_transaction (
     balance_impact VARCHAR(20)
 );
 
-
-create table user_profile
+CREATE TABLE SC_USER
 (
-    id            bigint       not null auto_increment,
-    email         varchar(255) not null,
-    user_password varchar(255),
-    event_id      bigint,
-    primary key (id)
+    ID            INTEGER PRIMARY KEY AUTO_INCREMENT,
+    USER_NAME     VARCHAR(1000),
+    USER_PASSWORD VARCHAR(1000)
 );
 
-
-create table user_role
+CREATE TABLE SC_ROLE
 (
-    id        bigint       not null auto_increment,
-    role_name varchar(255) not null,
-    primary key (id)
+    ID        INTEGER PRIMARY KEY AUTO_INCREMENT,
+    ROLE_NAME VARCHAR(1000)
 );
 
-
-create table m2m_user_profile_user_role
+CREATE TABLE SC_USER_ROLE
 (
-    user_profile_id bigint not null,
-    user_role_id    bigint not null,
-    primary key (user_profile_id, user_role_id)
+    ID         INTEGER PRIMARY KEY AUTO_INCREMENT,
+    SC_USER_ID INTEGER,
+    SC_ROLE_ID INTEGER,
+    CONSTRAINT FK_SC_USER_SC_USER_ROLE FOREIGN KEY (SC_USER_ID) REFERENCES SC_USER (ID),
+    CONSTRAINT FK_SC_ROLE_SC_USER_ROLE FOREIGN KEY (SC_ROLE_ID) REFERENCES SC_ROLE (ID)
 );
 
+-- USERS
+INSERT INTO SC_USER(ID, USER_NAME, USER_PASSWORD)
+VALUES (100, 'sheraz', '{noop}password');
 
-alter table m2m_user_profile_user_role
-    add constraint FK_m2m_user_profile_user_role_user_role_id
-        foreign key (user_role_id)
-            references user_role (id);
+INSERT INTO SC_USER(ID, USER_NAME, USER_PASSWORD)
+VALUES (110, 'tariq', '{noop}password');
 
-alter table m2m_user_profile_user_role
-    add constraint FK_m2m_user_profile_user_role_user_profile_id
-        foreign key (user_profile_id)
-            references user_profile (id);
+INSERT INTO SC_USER(ID, USER_NAME, USER_PASSWORD)
+VALUES (120, 'chaudhry', '{noop}password');
 
+-- ROLES & AUTHORITIES
+INSERT INTO SC_ROLE(ID, ROLE_NAME)
+VALUES (1000, 'ROLE_USER');
 
+INSERT INTO SC_ROLE(ID, ROLE_NAME)
+VALUES (1010, 'ROLE_ADMIN');
+
+INSERT INTO SC_ROLE(ID, ROLE_NAME)
+VALUES (1020, 'READ');
+
+INSERT INTO SC_ROLE(ID, ROLE_NAME)
+VALUES (1030, 'WRITE');
+
+-- USER and ROLES & AUTHORITIES mapping
+-- sheraz - ROLE_ADMIN ROLE_USER READ WRITE
+INSERT INTO SC_USER_ROLE(ID, SC_USER_ID, SC_ROLE_ID)
+VALUES (2010, 100, 1000);
+
+INSERT INTO SC_USER_ROLE(ID, SC_USER_ID, SC_ROLE_ID)
+VALUES (2020, 100, 1010);
+
+INSERT INTO SC_USER_ROLE(ID, SC_USER_ID, SC_ROLE_ID)
+VALUES (2030, 100, 1020);
+
+INSERT INTO SC_USER_ROLE(ID, SC_USER_ID, SC_ROLE_ID)
+VALUES (2040, 100, 1030);
+
+-- tariq ROLE_USER READ WRITE
+INSERT INTO SC_USER_ROLE(ID, SC_USER_ID, SC_ROLE_ID)
+VALUES (2050, 110, 1000);
+
+INSERT INTO SC_USER_ROLE(ID, SC_USER_ID, SC_ROLE_ID)
+VALUES (2060, 110, 1020);
+
+INSERT INTO SC_USER_ROLE(ID, SC_USER_ID, SC_ROLE_ID)
+VALUES (2070, 110, 1030);
+
+-- chaudhry - ROLE_USER READ
+INSERT INTO SC_USER_ROLE(ID, SC_USER_ID, SC_ROLE_ID)
+VALUES (2080, 120, 1000);
+
+INSERT INTO SC_USER_ROLE(ID, SC_USER_ID, SC_ROLE_ID)
+VALUES (2090, 120, 1020);
+
+    select
+        su1_0.id,
+        su1_0.user_name,
+        su1_0.user_password 
+    from
+        sc_user su1_0 ;
 
 select *
 from paypal_transaction pt1_0 where 

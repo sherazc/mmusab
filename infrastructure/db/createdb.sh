@@ -9,4 +9,5 @@ docker run \
   --env="MYSQL_USER=dbuser" \
   --env="MYSQL_PASSWORD=password" \
   --mount source=sb_app06_db_volume,target=/var/lib/mysql \
-  mysql:latest
+  mysql:latest \
+  --lower_case_table_names=1
