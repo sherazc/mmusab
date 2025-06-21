@@ -6,13 +6,13 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/api/mohid")
+@RequestMapping("/api/mohid/import")
 @RequiredArgsConstructor
 public class MohidCsvUploadController {
 
   private final MohidCsvImportService service;
 
-  @PostMapping("/upload")
+  @PostMapping("/csv")
   public ResponseEntity<String> uploadCsv(@RequestParam("file") MultipartFile file) {
     try {
       service.importCsv(file.getInputStream());

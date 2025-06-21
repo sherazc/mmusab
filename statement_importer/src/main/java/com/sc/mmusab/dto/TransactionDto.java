@@ -12,8 +12,9 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionDto {
-  private Long boatId;
+  private Long boaId;
   private Long payPalId;
+  private Long mohidId;
   private Source source;
   private String fullName;
   private String description;

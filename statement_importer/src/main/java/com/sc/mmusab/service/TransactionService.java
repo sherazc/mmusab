@@ -3,8 +3,10 @@ package com.sc.mmusab.service;
 import com.sc.mmusab.dto.Source;
 import com.sc.mmusab.dto.TransactionDto;
 import com.sc.mmusab.entity.BoaTransaction;
+import com.sc.mmusab.entity.MohidTransaction;
 import com.sc.mmusab.entity.PaypalTransaction;
 import com.sc.mmusab.repo.BoaTransactionRepository;
+import com.sc.mmusab.repo.MohidTransactionRepository;
 import com.sc.mmusab.repo.PaypalTransactionRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.List;
 public class TransactionService {
   private BoaTransactionRepository boaTransactionRepository;
   private PaypalTransactionRepository paypalTransactionRepository;
+  private MohidTransactionRepository mohidTransactionRepository;
 
   public List<TransactionDto> getAllTransactions() {
     List<TransactionDto> transactions = new ArrayList<>();
@@ -60,9 +63,27 @@ public class TransactionService {
         .map(this::paypalToTransactionDto)
         .toList());
 
+    List<MohidTransaction> allMohidTransactions = mohidTransactionRepository.findAll();
+    transactions.addAll(allMohidTransactions.stream()
+        .filter(t -> t.getCategory() != null)
+        .filter(t -> t.getCategory().toLowerCase().contains("operation"))
+        .map(this::mohidToTransactionDto)
+        .toList());
+
     transactions.sort(Comparator.comparing(TransactionDto::getTransactionDate));
 
     return transactions;
+  }
+
+  private TransactionDto mohidToTransactionDto(MohidTransaction mohidTransaction) {
+    return TransactionDto.builder()
+        .transactionDate(mohidTransaction.getDonationDate())
+        .mohidId(mohidTransaction.getId())
+        .source(Source.MOHID)
+        .description(mohidTransaction.toString())
+        .fullName(mohidTransaction.getDonor() == null ? "" : mohidTransaction.getDonor().toUpperCase())
+        .amountCents((long) (mohidTransaction.getAmount().doubleValue() * 100))
+        .build();
   }
 
   private TransactionDto paypalToTransactionDto(PaypalTransaction paypalTransaction) {
@@ -74,9 +95,7 @@ public class TransactionService {
         .fullName(paypalTransaction.getName() == null ? "" : paypalTransaction.getName().toUpperCase())
         .amountCents((long) (paypalTransaction.getGross().doubleValue() * 100))
         .build();
-
   }
-
 
   private List<TransactionDto> getTransactionDtos(List<BoaTransaction> allBoaTransactions, String nameStartPrefix, String nameEndSuffix, List<String> blackListDescriptionTokens) {
     return allBoaTransactions.stream()
@@ -97,7 +116,7 @@ public class TransactionService {
     String description = boaTransaction.getDescription().toLowerCase();
 
     TransactionDto.TransactionDtoBuilder transactionDtoBuilder = TransactionDto.builder()
-        .boatId(boaTransaction.getId())
+        .boaId(boaTransaction.getId())
         .source(Source.BOA)
         .amountCents((long) (boaTransaction.getAmount().doubleValue() * 100))
         .description(boaTransaction.getDescription())
@@ -114,6 +133,5 @@ public class TransactionService {
     if (boaTransaction == null || boaTransaction.getDescription() == null) return false;
     String description = boaTransaction.getDescription().toLowerCase();
     return containStrings.stream().allMatch(description::contains);
-
   }
 }
