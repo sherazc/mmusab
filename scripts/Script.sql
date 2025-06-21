@@ -67,6 +67,23 @@ CREATE TABLE paypal_transaction (
     balance_impact VARCHAR(20)
 );
 
+
+CREATE TABLE MOHID_TRANSACTION (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    reference VARCHAR(50),
+    donor VARCHAR(100),
+    donation_date DATE,
+    donation_method VARCHAR(50),
+    transaction_type VARCHAR(50),
+    payment_method VARCHAR(50),
+    category VARCHAR(100),
+    recurring_date DATE,
+    status VARCHAR(50),
+    amount DECIMAL(10, 2)
+);
+
+
+
 CREATE TABLE SC_USER
 (
     ID            INTEGER PRIMARY KEY AUTO_INCREMENT,
