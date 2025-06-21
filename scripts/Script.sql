@@ -10,14 +10,14 @@ drop table boa_transactions;
 
 CREATE TABLE boa_statement_summary (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    deMMription VARCHAR(100),
+    description VARCHAR(100),
     summary_amount DECIMAL(15, 2)
 );
 
 CREATE TABLE boa_transaction (
     id INT AUTO_INCREMENT PRIMARY KEY,
     txn_date DATE,
-    deMMription TEXT,
+    description TEXT,
     amount DECIMAL(15, 2),
     running_balance DECIMAL(15, 2)
 );
@@ -157,3 +157,30 @@ from paypal_transaction pt1_0 where
 trim(BOTH from pt1_0.name)<>'' 
 and 
 pt1_0.gross>0;
+
+
+select
+        bt1_0.id,
+        bt1_0.amount,
+        bt1_0.description,
+        bt1_0.running_balance,
+        bt1_0.txn_date 
+    from
+        boa_transaction bt1_0 
+    where
+        bt1_0.amount>0;
+
+
+select * from boa_transaction
+where upper(description) like '%NAJMUL KHAN%'
+;
+
+
+select * from boa_transaction
+where upper(description) like '% CONF#%'
+;
+
+select * from boa_transaction
+where lower(description) like 'zelle%'
+and amount > 0
+

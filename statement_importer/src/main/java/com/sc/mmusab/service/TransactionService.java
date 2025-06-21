@@ -24,11 +24,33 @@ public class TransactionService {
 
     List<BoaTransaction> allBoaTransactions = boaTransactionRepository.findAllTransactions();
 
-    transactions.addAll(getTransactionDtos(allBoaTransactions,
-        "zelle payment from ", " for ", "operation"));
+    List<BoaTransaction> allBoaZelle = allBoaTransactions.stream()
+        .filter(t -> t.getDescription() != null)
+        .filter(t -> t.getDescription().toLowerCase().startsWith("zelle"))
+        .toList();
 
-    transactions.addAll(getTransactionDtos(allBoaTransactions,
-        "zelle recurring payment from ", " for ", "operation"));
+    List<BoaTransaction> allBoaZelleWithFor = allBoaZelle.stream()
+        .filter(t -> t.getDescription().toLowerCase().contains(" for "))
+        .toList();
+
+    // Sometimes Zelle do not contain " for ". In that case person name ends at " Conf#"
+    List<BoaTransaction> allBoaZelleWithoutFor = allBoaZelle.stream()
+        .filter(t -> !t.getDescription().toLowerCase().contains(" for "))
+        .toList();
+
+    List<String> blackListDescriptionTokens = List.of();
+
+    transactions.addAll(getTransactionDtos(allBoaZelleWithFor,
+        "zelle payment from ", " for ", blackListDescriptionTokens));
+
+    transactions.addAll(getTransactionDtos(allBoaZelleWithFor,
+        "zelle recurring payment from ", " for ", blackListDescriptionTokens));
+
+    transactions.addAll(getTransactionDtos(allBoaZelleWithoutFor,
+        "zelle payment from ", " conf#", blackListDescriptionTokens));
+
+    transactions.addAll(getTransactionDtos(allBoaZelleWithoutFor,
+        "zelle recurring payment from ", " conf#", blackListDescriptionTokens));
 
     List<PaypalTransaction> allPaypalTransactions = paypalTransactionRepository.findAllTransactions();
 
@@ -56,12 +78,19 @@ public class TransactionService {
   }
 
 
-  private List<TransactionDto> getTransactionDtos(List<BoaTransaction> allBoaTransactions, String nameStartPrefix, String nameEndSuffix, String containsString) {
+  private List<TransactionDto> getTransactionDtos(List<BoaTransaction> allBoaTransactions, String nameStartPrefix, String nameEndSuffix, List<String> blackListDescriptionTokens) {
     return allBoaTransactions.stream()
-        .filter(t -> contains(t, List.of(nameStartPrefix, nameEndSuffix, containsString)))
+        .filter(t -> contains(t, List.of(nameStartPrefix, nameEndSuffix)))
         .filter(t -> t.getTxnDate() != null)
+        .filter(t -> t.getDescription() != null)
+        .filter(t -> notContainBlackListTokens(t.getDescription(), blackListDescriptionTokens))
         .map(t -> zelleBoaToTransactionDto(t, nameStartPrefix, nameEndSuffix))
         .toList();
+  }
+
+  private boolean notContainBlackListTokens(String description, List<String> blackListDescriptionTokens) {
+    return blackListDescriptionTokens.stream().noneMatch(token ->
+        description.toLowerCase().contains(token.toLowerCase()));
   }
 
   private TransactionDto zelleBoaToTransactionDto(BoaTransaction boaTransaction, String prefix, String suffix) {
