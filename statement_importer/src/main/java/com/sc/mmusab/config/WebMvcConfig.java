@@ -28,7 +28,17 @@ public class WebMvcConfig implements WebMvcConfigurer {
         });
   }
 
+  /*
+  // Configured in SecurityConfig.java
   public void addCorsMappings(CorsRegistry registry) {
-    registry.addMapping("/api/**");
+    registry
+        .addMapping("/api/**")
+        .allowedOrigins("http://localhost:3000/")
+        .allowedMethods("*")
+        .allowedHeaders("*")
+        .allowCredentials(true)
+        .exposedHeaders("*")
+    ;
   }
+   */
 }

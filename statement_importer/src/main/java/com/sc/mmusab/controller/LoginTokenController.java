@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 public class LoginTokenController {
     private final ScTokenGeneratorService scTokenGeneratorService;
 
