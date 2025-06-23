@@ -1,16 +1,13 @@
-import React, { ChangeEvent, FormEvent, useState } from "react";
-import { ScToken } from "../types/types";
+import React, { ChangeEvent, FormEvent, useContext, useReducer, useState } from "react";
+import { LoginRequest, ScToken } from "../types/types";
+import { AppContext } from "../store/context";
 
 interface Props { }
 
-type LoginRequestType = {
-  userName: string;
-  userPassword: string;
-}
-
 export const Login: React.FC<Props> = () => {
 
-  const [loginRequest, setLoginRequest] = useState<LoginRequestType>({ userName: "", userPassword: "" });
+  const [loginRequest, setLoginRequest] = useState<LoginRequest>({ userName: "", userPassword: "" });
+  const [{scToken}, dispatch] = useContext(AppContext);
 
   const handleInputChange = (element: ChangeEvent<HTMLInputElement>) => {
     setLoginRequest({

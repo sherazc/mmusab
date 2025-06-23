@@ -1,16 +1,3 @@
-export type RegisterUserRecord = {
-  id?: number;
-  userName: string;
-  userPassword: string;
-  registerRoleId: number;
-  registerTime: string;
-};
-
-export type RegisterRole = {
-  id: number;
-  roleName: string;
-};
-
 export const emptyScToken = (): ScToken => ({
   token: "",
   userName: "",
@@ -25,4 +12,9 @@ export type ScToken = {
   roles: string,
   createdDateTime: string,
   expiresDateTime: string
+}
+
+export type LoginRequest = {
+  userName: string;
+  userPassword: string;
 }
